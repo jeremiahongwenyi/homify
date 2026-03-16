@@ -1,4 +1,5 @@
 const API_BASE = "/api";
+import { emailVerificationSchema } from "@/schemas/auth";
 
 export const api = {
   // Upload to Cloudinary
@@ -107,4 +108,20 @@ export const api = {
 
     return response.json();
   },
+
+  checkEmail : async (email: string)=>{
+
+   emailVerificationSchema.parse({email})
+
+    const response = await fetch(`${API_BASE}/check-email`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({email})
+    })
+
+    if(!response.ok){
+       throw new Error("Email verification failed");
+    }
+     return response.json();
+  }
 };

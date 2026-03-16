@@ -5,13 +5,17 @@ import FeaturesSection from "@/components/home/FeaturesSection";
 import FeaturedProducts from "@/components/home/FeaturedProducts";
 import CategorySection from "@/components/home/CategorySection";
 import { useEffect } from "react";
-import { signIn } from "@/lib/auth-client";
+import { signIn, signUp } from "@/lib/auth-client";
+
 
 export default function Home() {
   useEffect(() => {
     // getTestData()
     // Login();
-    checkEmail("jerr@gmail.com");
+    // checkEmail("jerr@gmail.com");
+ checkEmail("john.doe@example.com");
+    
+    signUpUser();
   });
 
   const checkEmail = async (email: string) => {
@@ -29,8 +33,8 @@ export default function Home() {
   const Login = async () => {
     try {
       const { data, error } = await signIn.email({
-        email: "jerrmiah.ongwenyi@gmail.com",
-        password: "wrwywgsv",
+        email: "john.doe@example.com",
+        password: "password1234",
       });
 
       console.log("data", data);
@@ -39,6 +43,22 @@ export default function Home() {
       (console.log("error"), err);
     }
   };
+
+const signUpUser  = async ()=> {
+  try {
+    const {data, error} = await signUp.email({
+      name: 'Lydia Wambui',
+      email: "john.doe@example.com", // required
+      password: "password1234"
+    });
+
+    console.log('data', data);
+    console.log('error', error);
+    
+  } catch (error){
+    console.log('error during signup', error);
+  }
+}
 
   const getTestData = async () => {
     try {

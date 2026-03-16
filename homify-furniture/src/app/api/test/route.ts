@@ -3,7 +3,7 @@ import { sql } from "@/lib/neon-db";
 
 export async function GET() {
   try {
-    const response = await sql `SELECT version()`
+    const response = await sql`SELECT version()`
 
     return NextResponse.json({
      success: true,
