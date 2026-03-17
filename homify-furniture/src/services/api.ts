@@ -17,7 +17,7 @@ export const api = {
     });
 
     const data = await response.json();
-    
+
     if (!response.ok) {
       throw new Error(data.error || "Upload failed");
     }
@@ -109,19 +109,19 @@ export const api = {
     return response.json();
   },
 
-  checkEmail : async (email: string)=>{
-
-   emailVerificationSchema.parse({email})
+  checkEmail: async (email: string) => {
+    emailVerificationSchema.parse({ email });
 
     const response = await fetch(`${API_BASE}/check-email`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({email})
-    })
+      body: JSON.stringify({ email }),
+    });
 
-    if(!response.ok){
-       throw new Error("Email verification failed");
+    if (!response.ok) {
+      throw new Error("Email verification failed");
     }
-     return response.json();
-  }
+    return response.json();
+  },
+
 };

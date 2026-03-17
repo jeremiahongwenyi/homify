@@ -8,15 +8,26 @@ import Link from "next/link";
 import { toast } from "sonner";
 import { CheckOutAuthDialog } from "@/components/auth/CheckOutAuthDialog";
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 
 export default function CartSidebar() {
+  const router = useRouter()
   const { items, total, isOpen, closeCart, updateQuantity, removeItem } =
     useCart();
 
   const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const [showAuthDialog, setShowAuthDialog] = useState(true);
+  const [showAuthDialog, setShowAuthDialog] = useState(false);
 
   if (!isOpen) return null;
+
+  const proceedToCheckOut = ()=>{
+    if(isAuthenticated){
+      closeCart()
+      router.push('/checkout')
+    } else {
+      setShowAuthDialog(true)
+    }
+  }
 
   return (
     <>
@@ -118,11 +129,11 @@ export default function CartSidebar() {
               <p className="text-xs text-muted-foreground">
                 Shipping calculated at checkout
               </p>
-              <Button className="w-full" size="lg" asChild>
+              <Button className="w-full" size="lg" onClick= {proceedToCheckOut}>
                 {/* Proceed to Checkout */}
-                <Link href="/products" onClick={closeCart}>
+                {/* <Link href="/products" onClick={closeCart}> */}
                   Proceed to Checkout
-                </Link>
+                {/* </Link> */}
               </Button>
               <Button
                 variant="outline"
@@ -136,7 +147,7 @@ export default function CartSidebar() {
 
             <div>
               <CheckOutAuthDialog
-                open={true}
+                open={!isAuthenticated && showAuthDialog}
                 onOpenChange={setShowAuthDialog}
                 onAuthenticated={() => {
                   setIsAuthenticated(true);
