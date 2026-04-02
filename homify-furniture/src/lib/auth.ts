@@ -1,13 +1,10 @@
 import { betterAuth } from "better-auth";
 import { Pool } from "pg";
 
-const connectionString =
-  process.env.DATABASE_URL;
+const connectionString = process.env.DATABASE_URL;
 
 if (!connectionString) {
-  throw new Error(
-    "Missing database connection string. Set DATABASE_URL.",
-  );
+  throw new Error("Missing database connection string. Set DATABASE_URL.");
 }
 
 const pool = new Pool({
@@ -21,15 +18,19 @@ export const auth = betterAuth({
     enabled: true,
   },
   user: {
-    additionalFields:{
+    additionalFields: {
       role: {
-        type:"string",
-        input:false
-      }
-
-    }
+        type: "string",
+        input: false,
+      },
+      phone_number: {
+        type: "string",
+        input: true,
+        required: true,
+      },
+    },
   },
-  
+
 });
 
-type Session = typeof auth.$Infer.Session
+type Session = typeof auth.$Infer.Session;

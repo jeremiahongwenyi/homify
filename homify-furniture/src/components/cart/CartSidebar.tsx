@@ -9,6 +9,7 @@ import { toast } from "sonner";
 import { CheckOutAuthDialog } from "@/components/auth/CheckOutAuthDialog";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { Product } from "@/types/product";
 
 export default function CartSidebar() {
   const router = useRouter()

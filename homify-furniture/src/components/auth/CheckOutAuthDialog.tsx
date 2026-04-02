@@ -33,6 +33,7 @@ import z from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { signUp, signIn } from "@/lib/auth-client";
 import { useRouter } from "next/navigation";
+import { useCart } from "@/store/hooks";
 
 type Step = "email" | "login" | "register";
 
@@ -50,6 +51,8 @@ export function CheckOutAuthDialog({
   const router = useRouter();
   const [step, setStep] = useState<Step>("email");
   const [userEmail, setUserEmail] = useState("");
+
+  const { closeCart } = useCart();
 
   const emailForm = useForm<z.infer<typeof emailVerificationSchema>>({
     resolver: zodResolver(emailVerificationSchema),
@@ -105,21 +108,21 @@ export function CheckOutAuthDialog({
 
     console.log("data", data);
     console.log("error", error);
+    closeCart()
     if (error) {
       toast.error(error.message);
       return;
     }
 
-
-  toast.success("Login Successful");
-
-  // ✅ Notify parent
-  onAuthenticated();
-
-  // ✅ Optional: close dialog explicitly (parent already does it)
-  onOpenChange(false);
     toast.success("Login Successful");
-        router.push("/checkout");
+
+    // ✅ Notify parent
+    onAuthenticated();
+
+    // ✅ Optional: close dialog explicitly (parent already does it)
+    onOpenChange(false);
+    toast.success("Login Successful");
+    router.push("/checkout");
   };
 
   const registerMutation = useMutation({
@@ -127,43 +130,37 @@ export function CheckOutAuthDialog({
   });
 
   const register = async () => {
-    try{
-      const { firstName, lastName, password } = registerForm.getValues();
-    const { data, error } = await signUp.email({
-      name: `${firstName} ${lastName}`,
-      email: userEmail,
-      password,
-    });
+    console.log(registerForm.getValues());
 
-    console.log("data", data);
-    console.log("error", error);
-
-    if (error) {
-      toast.error(error.message || "Login failed");
-      return;
+    try {
+      const { firstName, lastName, password, phone } = registerForm.getValues();
+      const { data, error } = await signUp.email({
+        name: `${firstName} ${lastName}`,
+        email: userEmail,
+        phone_number: phone,
+        password,
+      });
+      console.log("data", data);
+      console.log("error", error);
+      if (error) {
+        toast.error(error.message || "Login failed");
+        return;
+      }
+      if (!data) {
+        toast.error("Something went wrong. Please try again.");
+        return;
+      }
+      // ✅ Notify parent
+      onAuthenticated();
+      // ✅ Optional: close dialog explicitly (parent already does it)
+      onOpenChange(false);
+      toast.success("SignUp Successful");
+      router.push("/checkout");
+    } catch (err: any) {
+      console.error("Unexpected error:", err);
+      toast.error(err.message || "An unexpected error occurred");
     }
-
-    if (!data) {
-      toast.error("Something went wrong. Please try again.");
-      return;
-    }
-    // ✅ Notify parent
-  onAuthenticated();
-
-  // ✅ Optional: close dialog explicitly (parent already does it)
-  onOpenChange(false);
-
-    toast.success("SignUp Successful");
-    router.push("/checkout");
-    }
-
-   catch (err: any) {
-    console.error("Unexpected error:", err);
-    toast.error(err.message || "An unexpected error occurred");
-  }
   };
-
-
 
   const handleSocialLogin = (provider: string) => {};
 
@@ -459,3 +456,4 @@ export function CheckOutAuthDialog({
     </Dialog>
   );
 }
+

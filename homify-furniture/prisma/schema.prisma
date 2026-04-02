@@ -44,11 +44,12 @@ model user {
   id            String    @id
   name          String
   email         String    @unique
+  phone_number  String
   emailVerified Boolean
   image         String?
   createdAt     DateTime  @default(now()) @db.Timestamptz(6)
   updatedAt     DateTime  @default(now()) @db.Timestamptz(6)
-  role          String
+  role          String   @default("user") // ✅ default value
   account       account[]
   session       session[]
 }
