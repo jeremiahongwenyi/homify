@@ -2,11 +2,11 @@ import { betterAuth } from "better-auth";
 import { Pool } from "pg";
 
 const connectionString =
-  process.env.NEON_DATABASE_URL;
+  process.env.DATABASE_URL;
 
 if (!connectionString) {
   throw new Error(
-    "Missing database connection string. Set NEON_DATABASE_URL or DATABASE_URL.",
+    "Missing database connection string. Set DATABASE_URL.",
   );
 }
 
