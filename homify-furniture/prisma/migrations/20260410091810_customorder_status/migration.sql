@@ -1,0 +1,5 @@
+-- CreateEnum
+CREATE TYPE "CustomOrderStatus" AS ENUM ('PENDING', 'UNDER_REVIEW', 'QUOTED', 'NEGOTIATION', 'APPROVED', 'REJECTED', 'EXPIRED', 'CONVERTED_TO_ORDER');
+
+-- AlterTable
+ALTER TABLE "CustomOrder" ADD COLUMN     "status" "CustomOrderStatus" NOT NULL DEFAULT 'PENDING';
