@@ -1,33 +1,30 @@
 const API_BASE = "/api";
 import { emailVerificationSchema } from "@/schemas/auth";
+import type { CustomOrder, imageUploadResponse } from "@/types/custom-orders";
 
 export const api = {
-  // Upload to Cloudinary
-  uploadImage: async (
-    file: File,
+  createCustomOrder: async (
+    files: File[],
+    order: CustomOrder,
     folder?: string,
-  ): Promise<{ url: string; publicId: string; success: boolean }> => {
-    const formData = new FormData();
-    formData.append("file", file);
-    if (folder) formData.append("folder", folder);
+  ) => {
+    console.log("Images received", files);
+    console.log("order received", order);
 
-    const response = await fetch(`${API_BASE}/upload`, {
-      method: "POST",
-      body: formData,
-    });
+    try {
+      const resp = await createOrder(order);
 
-    const data = await response.json();
+      // const uploadPromises = files.map((file) => uploadImage(file, folder));
+      // const response: imageUploadResponse[] = await Promise.all(uploadPromises);
+      // console.log("upload responses", response);
 
-    if (!response.ok) {
-      throw new Error(data.error || "Upload failed");
+      // const orderWithImages = { ...order, response };
+      return resp;
+    } catch (error: any) {
+      console.log("error occured in createorder method", error);
+
+      throw error;
     }
-
-    return data;
-  },
-
-  uploadMultipleImages: async (files: File[], folder?: string) => {
-    const uploadPromises = files.map((file) => api.uploadImage(file, folder));
-    return Promise.all(uploadPromises);
   },
 
   deleteImage: async (publicId: string) => {
@@ -50,20 +47,6 @@ export const api = {
       ? `${API_BASE}/orders?limit=${limit}`
       : `${API_BASE}/orders`;
     const response = await fetch(url);
-    return response.json();
-  },
-
-  createOrder: async (orderData: any) => {
-    const response = await fetch(`${API_BASE}/orders`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(orderData),
-    });
-
-    if (!response.ok) {
-      throw new Error("Failed to create order");
-    }
-
     return response.json();
   },
 
@@ -123,5 +106,56 @@ export const api = {
     }
     return response.json();
   },
+};
 
+const uploadImage = async (file: File, folder?: string) => {
+  console.log("single file to upload", file, folder);
+
+  const formData = new FormData();
+  formData.append("file", file);
+  if (folder) formData.append("folder", folder);
+
+  console.log("formdata", formData);
+
+  const response = await fetch(`${API_BASE}/upload`, {
+    method: "POST",
+    body: formData,
+  });
+
+  const data = await response.json();
+
+  console.log("data from the upload", data);
+
+  if (!response.ok) {
+    throw new Error(data.error || "Upload failed");
+  }
+
+  const { url, publicId } = data;
+  return { imageUrl: url, publicId };
+};
+
+const createOrder = async (orderData: CustomOrder) => {
+  console.log("am now in create order", orderData);
+
+  try {
+    const response = await fetch(`${API_BASE}/orders`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(orderData),
+    });
+
+    const res = await response.json();
+
+    console.log("response in creating", res);
+
+   // 🔥  error handling
+  if (!response.ok || !res.success) {
+    throw (res?.error);
+  }
+
+  return res;
+  } catch (error) {
+   console.log("eeei nomaaa", error);
+    throw error  
+  }
 };

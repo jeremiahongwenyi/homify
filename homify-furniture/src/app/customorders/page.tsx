@@ -5,6 +5,7 @@ import { UploadWithAPI } from "@/components/UploadWithAPI";
 import { api } from "@/services/api";
 import { CheckCircle, AlertCircle, Loader2 } from "lucide-react";
 import { toast } from "sonner";
+import { CustomOrder } from "@/types/custom-orders";
 
 interface UploadResult {
   url: string;
@@ -64,15 +65,15 @@ export default function CustomOrderPage() {
     e.preventDefault();
 
     // Validation
-    if (
-      !formData.name.trim() ||
-      !formData.email.trim() ||
-      !formData.phone.trim() ||
-      !formData.description.trim()
-    ) {
-      setError("Please fill in all required fields");
-      return;
-    }
+    // if (
+    //   !formData.name.trim() ||
+    //   !formData.email.trim() ||
+    //   !formData.phone.trim() ||
+    //   !formData.description.trim()
+    // ) {
+    //   setError("Please fill in all required fields");
+    //   return;
+    // }
 
     if (selectedImages.length === 0) {
       setError("Please select at least one reference image");
@@ -83,92 +84,116 @@ export default function CustomOrderPage() {
     setUploadingImages(true);
     setError(null);
 
-    try {
-      // Step 1: Upload images to Cloudinary
-      console.log("Starting image upload to Cloudinary...");
-      let uploadedImages: UploadResult[] = [];
+    // Step 1: Upload images to Cloudinary
+    console.log("Starting image upload to Cloudinary...");
+    let uploadedImages: UploadResult[] = [];
+    console.log("selectedimages", selectedImages);
 
-      try {
-        uploadedImages = await api.uploadMultipleImages(
-          selectedImages,
-          "custom-orders",
-        );
-        console.log("Images uploaded successfully:", uploadedImages);
-      } catch (uploadError) {
-        console.error("Image upload error:", uploadError);
-        setUploadingImages(false);
-        setSubmitting(false);
-        throw new Error(
-          uploadError instanceof Error
-            ? `Failed to upload images: ${uploadError.message}`
-            : "Failed to upload images to Cloudinary. Please check your file sizes and try again.",
-        );
-      }
-
-      setUploadingImages(false);
-
-      // Step 2: Save order data to database (automatically after successful upload)
-      console.log("Saving order data to database...");
-      try {
-        const orderData = {
-          customerName: formData.name,
-          email: formData.email,
-          phone: formData.phone,
+    const customOrderData: CustomOrder = {
+          customerName: '',
+          customerEmail: formData.email,
+          customerPhone: formData.phone,
           description: formData.description,
           category: formData.category,
-          budget: formData.budget ? parseInt(formData.budget) : null,
+          budgetMax: formData.budget ? parseInt(formData.budget) : null,
+          // budgetMax: formData.budget ? parseInt(formData.budget) : null,
           dimensions: formData.dimensions,
           materialPreference: formData.materialPreference,
           colorPreference: formData.colorPreference,
-          images: uploadedImages.map((img) => ({
-            url: img.url,
-            publicId: img.publicId,
-          })),
         };
 
-        // Save to Firebase via API
-        const result = await api.createOrder(orderData);
-        console.log("Order saved successfully:", result);
-
-        setSuccess(true);
-        toast.success("Order created successfully!");
-
-        // Reset form and images after delay
-        setTimeout(() => {
-          setFormData({
-            name: "",
-            email: "",
-            phone: "",
-            description: "",
-            category: "sofa",
-            budget: "",
-            dimensions: "",
-            materialPreference: "",
-            colorPreference: "",
-          });
-          setSelectedImages([]);
-          setResetUpload((prev) => !prev); // Toggle to trigger reset in UploadWithAPI
-          setSuccess(false);
-        }, 3000);
-      } catch (dbError) {
-        console.error("Database save error:", dbError);
-        throw new Error(
-          dbError instanceof Error
-            ? `Failed to save order: ${dbError.message}`
-            : "Failed to save your order to the database. Please try again.",
-        );
-      }
-    } catch (err) {
-      console.error("Submission error:", err);
-      setError(
-        err instanceof Error
-          ? err.message
-          : "An unexpected error occurred. Please try again.",
+    try {
+      const response = await api.createCustomOrder(
+        selectedImages,
+        customOrderData,
+        "custom-orders",
       );
-    } finally {
-      setSubmitting(false);
-      setUploadingImages(false);
+    } catch (error:any) {
+      toast.error(error.message)
+     
     }
+
+    //   try {
+    //     uploadedImages = await api.uploadMultipleImages(
+    //       selectedImages,
+    //       "custom-orders",
+    //     );
+    //     console.log("Images uploaded successfully:", uploadedImages);
+    //   } catch (uploadError) {
+    //     console.error("Image upload error:", uploadError);
+    //     setUploadingImages(false);
+    //     setSubmitting(false);
+    //     throw new Error(
+    //       uploadError instanceof Error
+    //         ? `Failed to upload images: ${uploadError.message}`
+    //         : "Failed to upload images to Cloudinary. Please check your file sizes and try again.",
+    //     );
+    //   }
+
+    //   setUploadingImages(false);
+
+    //   // Step 2: Save order data to database (automatically after successful upload)
+    //   console.log("Saving order data to database...");
+    //   try {
+    //     const orderData = {
+    //       customerName: formData.name,
+    //       email: formData.email,
+    //       phone: formData.phone,
+    //       description: formData.description,
+    //       category: formData.category,
+    //       budget: formData.budget ? parseInt(formData.budget) : null,
+    //       dimensions: formData.dimensions,
+    //       materialPreference: formData.materialPreference,
+    //       colorPreference: formData.colorPreference,
+    //       images: uploadedImages.map((img) => ({
+    //         url: img.url,
+    //         publicId: img.publicId,
+    //       })),
+    //     };
+
+    //     // Save to Firebase via API
+    //     const result = await api.createOrder(orderData);
+    //     console.log("Order saved successfully:", result);
+
+    //     setSuccess(true);
+    //     toast.success("Order created successfully!");
+
+    //     // Reset form and images after delay
+    //     setTimeout(() => {
+    //       setFormData({
+    //         name: "",
+    //         email: "",
+    //         phone: "",
+    //         description: "",
+    //         category: "sofa",
+    //         budget: "",
+    //         dimensions: "",
+    //         materialPreference: "",
+    //         colorPreference: "",
+    //       });
+    //       setSelectedImages([]);
+    //       setResetUpload((prev) => !prev); // Toggle to trigger reset in UploadWithAPI
+    //       setSuccess(false);
+    //     }, 3000);
+    //   } catch (dbError) {
+    //     console.error("Database save error:", dbError);
+    //     throw new Error(
+    //       dbError instanceof Error
+    //         ? `Failed to save order: ${dbError.message}`
+    //         : "Failed to save your order to the database. Please try again.",
+    //     );
+    //   }
+    // } catch (err) {
+    //   console.error("Submission error:", err);
+    //   setError(
+    //     err instanceof Error
+    //       ? err.message
+    //       : "An unexpected error occurred. Please try again.",
+    //   );
+    // } finally {
+    //   setSubmitting(false);
+    //   setUploadingImages(false);
+    // }
   };
 
   return (
@@ -431,7 +456,7 @@ export default function CustomOrderPage() {
           <div className="bg-white rounded-2xl p-8 shadow-sm">
             <button
               type="submit"
-              disabled={!isFormValid() || submitting}
+              // disabled={!isFormValid() || submitting}
               className="w-full py-4 px-6 text-white font-bold text-lg rounded-lg disabled:opacity-50 disabled:cursor-not-allowed transition flex items-center justify-center gap-3"
               style={{ backgroundColor: "#235c47" }}
               onMouseEnter={(e) =>

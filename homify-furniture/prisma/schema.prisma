@@ -65,11 +65,43 @@ model verification {
   @@index([identifier])
 }
 
-model test_orders {
-  id   String    @id
-  orderNumber String
-  orderDate DateTime @default(now()) @db.Timestamptz(6)
-  createdAt  DateTime @default(now()) @db.Timestamptz(6)
-  updatedAt  DateTime @default(now()) @db.Timestamptz(6)
-  @@index([orderNumber])
+model CustomOrder {
+  id                    String   @id @default(uuid())
+  userId                String?
+  customerName          String?
+  customerEmail         String
+  customerPhone         String?
+  description           String?
+  category              String?
+  budgetMax             Float?
+  budgetMin             Float?
+  dimensions            String?
+  materialPreference    String?
+  colorPreference       String?
+  status                CustomOrderStatus @default(PENDING)
+  createdAt             DateTime @default(now())
+  updatedAt             DateTime @updatedAt
+  images                CustomOrderImage[]
+}
+
+
+  
+model CustomOrderImage {
+  id                  String   @id @default(uuid())
+  customOrderId       String
+  imageUrl            String
+  publicId            String 
+  customOrder         CustomOrder @relation(fields: [customOrderId], references: [id])
+}
+
+
+enum CustomOrderStatus {
+  PENDING
+  UNDER_REVIEW
+  QUOTED
+  NEGOTIATION
+  APPROVED
+  REJECTED
+  EXPIRED
+  CONVERTED_TO_ORDER
 }
