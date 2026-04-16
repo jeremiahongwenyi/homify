@@ -85,12 +85,8 @@ export default function CustomOrderPage() {
     setError(null);
 
     // Step 1: Upload images to Cloudinary
-    console.log("Starting image upload to Cloudinary...");
-    let uploadedImages: UploadResult[] = [];
-    console.log("selectedimages", selectedImages);
-
     const customOrderData: CustomOrder = {
-          customerName: '',
+          customerName: formData.name,
           customerEmail: formData.email,
           customerPhone: formData.phone,
           description: formData.description,
@@ -108,9 +104,10 @@ export default function CustomOrderPage() {
         customOrderData,
         "custom-orders",
       );
+
+      toast.success(response)
     } catch (error:any) {
-      toast.error(error.message)
-     
+      toast.error(error.message)   
     }
 
     //   try {

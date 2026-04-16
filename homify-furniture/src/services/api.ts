@@ -13,13 +13,18 @@ export const api = {
 
     try {
       const resp = await createOrder(order);
-
-      // const uploadPromises = files.map((file) => uploadImage(file, folder));
-      // const response: imageUploadResponse[] = await Promise.all(uploadPromises);
-      // console.log("upload responses", response);
-
       // const orderWithImages = { ...order, response };
-      return resp;
+      console.log("pick the order id from here", resp);
+      const { id } = resp.data;
+
+      const uploadPromises = files.map((file) => uploadImage(file, folder));
+      const response: imageUploadResponse[] = await Promise.all(uploadPromises);
+      console.log("uploaded responses", response);
+
+
+      const saveImageResponse = await saveImage(id,response)
+
+      return "Your order has been received successfully. We've sent you an email with more information and next steps.";
     } catch (error: any) {
       console.log("error occured in createorder method", error);
 
@@ -109,6 +114,7 @@ export const api = {
 };
 
 const uploadImage = async (file: File, folder?: string) => {
+  console.log("Starting image upload to Cloudinary...");
   console.log("single file to upload", file, folder);
 
   const formData = new FormData();
@@ -122,17 +128,41 @@ const uploadImage = async (file: File, folder?: string) => {
     body: formData,
   });
 
-  const data = await response.json();
+  const resp = await response.json();
 
-  console.log("data from the upload", data);
+  console.log("data from the upload", resp);
 
-  if (!response.ok) {
-    throw new Error(data.error || "Upload failed");
+  if (!response.ok || !resp.success) {
+    throw resp?.error;
   }
 
-  const { url, publicId } = data;
+  const { url, publicId } = resp?.data;
   return { imageUrl: url, publicId };
 };
+
+const saveImage = async(id:string, images: imageUploadResponse[] )=>{
+ try {
+    const response = await fetch(`${API_BASE}/save-images`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({customOrderId:id,images}),
+    });
+
+    const res = await response.json();
+
+    console.log("response in saving", res);
+
+    if (!response.ok || !res.success) {
+      throw res?.error;
+    }
+
+    return res;
+  } catch (error) {
+    throw error;
+  }
+
+
+}
 
 const createOrder = async (orderData: CustomOrder) => {
   console.log("am now in create order", orderData);
@@ -148,14 +178,14 @@ const createOrder = async (orderData: CustomOrder) => {
 
     console.log("response in creating", res);
 
-   // 🔥  error handling
-  if (!response.ok || !res.success) {
-    throw (res?.error);
-  }
+    // 🔥  error handling
+    if (!response.ok || !res.success) {
+      throw res?.error;
+    }
 
-  return res;
+    return res;
   } catch (error) {
-   console.log("eeei nomaaa", error);
-    throw error  
+    console.log("eeei nomaaa", error);
+    throw error;
   }
 };

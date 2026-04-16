@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 
 export const apiSuccess = <T>(data: T, status: number) => {
-    console.log('data received', data);
+    // console.log('data received', data);
     
   return NextResponse.json(
     {

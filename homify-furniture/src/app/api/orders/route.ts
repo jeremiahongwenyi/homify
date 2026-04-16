@@ -68,7 +68,7 @@ export async function POST(request: NextRequest) {
     console.error("POST order error:", error);
     return apiError(
       {
-        message: "Failed to create order",
+        message: "We’re unable to process your order right now. Please try again shortly.",
       },
       500,
     );

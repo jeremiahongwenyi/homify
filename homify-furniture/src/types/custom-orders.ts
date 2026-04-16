@@ -11,8 +11,9 @@ export interface CustomOrder {
   colorPreference: string;
 }
 
-
 export interface imageUploadResponse {
-    imageUrl: string,
-    publicId:string
+  imageUrl: string;
+  publicId: string;
 }
+
+

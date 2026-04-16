@@ -13,9 +13,9 @@ export default function Home() {
     // getTestData()
     // Login();
     // checkEmail("jerr@gmail.com");
- checkEmail("john.doe@example.com");
+//  checkEmail("john.doe@example.com");
     
-    signUpUser();
+//     signUpUser();
   });
 
   const checkEmail = async (email: string) => {
@@ -49,6 +49,7 @@ const signUpUser  = async ()=> {
     const {data, error} = await signUp.email({
       name: 'Lydia Wambui',
       email: "john.doe@example.com", // required
+      phone_number: "0719352072",
       password: "password1234"
     });
 
