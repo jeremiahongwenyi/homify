@@ -9,6 +9,8 @@ export interface CustomOrder {
   dimensions?: string;
   materialPreference: string;
   colorPreference: string;
+  accessToken?: string;
+tokenExpiresAt?: Date
 }
 
 export interface imageUploadResponse {

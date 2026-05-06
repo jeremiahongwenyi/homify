@@ -1,6 +1,6 @@
 const API_BASE = "/api";
 import { emailVerificationSchema } from "@/schemas/auth";
-import type { CustomOrder, imageUploadResponse } from "@/types/custom-orders";
+import type { CustomOrder } from "@/types/custom-orders";
 
 export const api = {
   createCustomOrder: async (
@@ -12,22 +12,25 @@ export const api = {
     console.log("order received", order);
 
     try {
-      const resp = await createOrder(order);
-      // const orderWithImages = { ...order, response };
-      console.log("pick the order id from here", resp);
-      const { id } = resp.data;
+      const formData = new FormData();
+      formData.append("order", JSON.stringify(order));
+      formData.append("folder", folder || "custom-orders");
+      files.forEach((file) => formData.append("files", file));
 
-      const uploadPromises = files.map((file) => uploadImage(file, folder));
-      const response: imageUploadResponse[] = await Promise.all(uploadPromises);
-      console.log("uploaded responses", response);
+      const response = await fetch(`${API_BASE}/custom-order`, {
+        method: "POST",
+        body: formData,
+      });
 
+      const res = await response.json();
 
-      const saveImageResponse = await saveImage(id,response)
+      if (!response.ok || !res.success) {
+        throw new Error(res?.error?.message || "Failed to create custom order");
+      }
 
-      return "Your order has been received successfully. We've sent you an email with more information and next steps.";
+      return res?.data?.message || "Order submitted successfully.";
     } catch (error: any) {
       console.log("error occured in createorder method", error);
-
       throw error;
     }
   },
@@ -111,81 +114,4 @@ export const api = {
     }
     return response.json();
   },
-};
-
-const uploadImage = async (file: File, folder?: string) => {
-  console.log("Starting image upload to Cloudinary...");
-  console.log("single file to upload", file, folder);
-
-  const formData = new FormData();
-  formData.append("file", file);
-  if (folder) formData.append("folder", folder);
-
-  console.log("formdata", formData);
-
-  const response = await fetch(`${API_BASE}/upload`, {
-    method: "POST",
-    body: formData,
-  });
-
-  const resp = await response.json();
-
-  console.log("data from the upload", resp);
-
-  if (!response.ok || !resp.success) {
-    throw resp?.error;
-  }
-
-  const { url, publicId } = resp?.data;
-  return { imageUrl: url, publicId };
-};
-
-const saveImage = async(id:string, images: imageUploadResponse[] )=>{
- try {
-    const response = await fetch(`${API_BASE}/save-images`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({customOrderId:id,images}),
-    });
-
-    const res = await response.json();
-
-    console.log("response in saving", res);
-
-    if (!response.ok || !res.success) {
-      throw res?.error;
-    }
-
-    return res;
-  } catch (error) {
-    throw error;
-  }
-
-
-}
-
-const createOrder = async (orderData: CustomOrder) => {
-  console.log("am now in create order", orderData);
-
-  try {
-    const response = await fetch(`${API_BASE}/orders`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(orderData),
-    });
-
-    const res = await response.json();
-
-    console.log("response in creating", res);
-
-    // 🔥  error handling
-    if (!response.ok || !res.success) {
-      throw res?.error;
-    }
-
-    return res;
-  } catch (error) {
-    console.log("eeei nomaaa", error);
-    throw error;
-  }
 };

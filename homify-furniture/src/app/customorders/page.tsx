@@ -86,17 +86,17 @@ export default function CustomOrderPage() {
 
     // Step 1: Upload images to Cloudinary
     const customOrderData: CustomOrder = {
-          customerName: formData.name,
-          customerEmail: formData.email,
-          customerPhone: formData.phone,
-          description: formData.description,
-          category: formData.category,
-          budgetMax: formData.budget ? parseInt(formData.budget) : null,
-          // budgetMax: formData.budget ? parseInt(formData.budget) : null,
-          dimensions: formData.dimensions,
-          materialPreference: formData.materialPreference,
-          colorPreference: formData.colorPreference,
-        };
+      customerName: formData.name,
+      customerEmail: formData.email,
+      customerPhone: formData.phone,
+      description: formData.description,
+      category: formData.category,
+      budgetMax: formData.budget ? parseInt(formData.budget) : null,
+      // budgetMax: formData.budget ? parseInt(formData.budget) : null,
+      dimensions: formData.dimensions,
+      materialPreference: formData.materialPreference,
+      colorPreference: formData.colorPreference,
+    };
 
     try {
       const response = await api.createCustomOrder(
@@ -105,9 +105,10 @@ export default function CustomOrderPage() {
         "custom-orders",
       );
 
-      toast.success(response)
-    } catch (error:any) {
-      toast.error(error.message)   
+      toast.success(response);
+      // setSuccess(true)
+    } catch (error: any) {
+      toast.error(error.message);
     }
 
     //   try {
@@ -474,8 +475,11 @@ export default function CustomOrderPage() {
                 "Submit Custom Order Request"
               )}
             </button>
-
-            <div className="mt-6 grid grid-cols-1 md:grid-cols-2 gap-6 text-sm text-gray-500">
+            <p className="text-sm text-muted-foreground text-center mt-3">
+              By submitting this form, you agree to be contacted by our team
+              regarding your custom furniture request.
+            </p>
+            {/* <div className="mt-6 grid grid-cols-1 md:grid-cols-2 gap-6 text-sm text-gray-500">
               <div className="flex items-center gap-2">
                 <div
                   className="w-2 h-2 rounded-full"
@@ -487,7 +491,7 @@ export default function CustomOrderPage() {
                 <div className="w-2 h-2 bg-green-500 rounded-full"></div>
                 <span>Response within 24 hours</span>
               </div>
-            </div>
+            </div> */}
           </div>
         </form>
       </div>

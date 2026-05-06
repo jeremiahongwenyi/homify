@@ -78,7 +78,12 @@ model CustomOrder {
   dimensions            String?
   materialPreference    String?
   colorPreference       String?
-  status                CustomOrderStatus @default(PENDING)
+  status                CustomOrderStatus @default(AWAITING_EMAIL_VERIFICATION)
+  emailVerified         Boolean  @default(false)
+  accessToken           String? @unique
+  tokenExpiresAt        DateTime?
+  trackingToken         String?  @unique
+  trackingExpiresAt     DateTime?
   createdAt             DateTime @default(now())
   updatedAt             DateTime @updatedAt
   images                CustomOrderImage[]
@@ -96,6 +101,7 @@ model CustomOrderImage {
 
 
 enum CustomOrderStatus {
+  AWAITING_EMAIL_VERIFICATION
   PENDING
   UNDER_REVIEW
   QUOTED
