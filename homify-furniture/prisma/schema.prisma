@@ -80,6 +80,7 @@ model CustomOrder {
   colorPreference       String?
   status                CustomOrderStatus @default(AWAITING_EMAIL_VERIFICATION)
   emailVerified         Boolean  @default(false)
+  emailVerifiedAt       DateTime?
   accessToken           String? @unique
   tokenExpiresAt        DateTime?
   trackingToken         String?  @unique

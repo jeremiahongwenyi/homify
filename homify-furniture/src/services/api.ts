@@ -50,27 +50,44 @@ export const api = {
   },
 
   // Orders
-  getOrders: async (limit?: number) => {
-    const url = limit
-      ? `${API_BASE}/orders?limit=${limit}`
-      : `${API_BASE}/orders`;
-    const response = await fetch(url);
-    return response.json();
-  },
 
-  deleteOrder: async (orderId: string) => {
-    const response = await fetch(`${API_BASE}/orders`, {
-      method: "DELETE",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ orderId }),
-    });
+  getOrder: async (token: string) => {
+    const response = await fetch(
+      `${API_BASE}/custom-order/get-order?token=${encodeURIComponent(token)}`,
+      {
+        method: "GET",
+      },
+    );
 
-    if (!response.ok) {
-      throw new Error("Failed to delete order");
+    const res = await response.json();
+    if (!response.ok || !res.success) {
+      throw new Error(res?.error?.message || "Failed to fetch order");
     }
 
-    return response.json();
+    const { order } = res.data;
+    return order;
   },
+  // getOrders: async (limit?: number) => {
+  //   const url = limit
+  //     ? `${API_BASE}/orders?limit=${limit}`
+  //     : `${API_BASE}/orders`;
+  //   const response = await fetch(url);
+  //   return response.json();
+  // },
+
+  // deleteOrder: async (orderId: string) => {
+  //   const response = await fetch(`${API_BASE}/orders`, {
+  //     method: "DELETE",
+  //     headers: { "Content-Type": "application/json" },
+  //     body: JSON.stringify({ orderId }),
+  //   });
+
+  //   if (!response.ok) {
+  //     throw new Error("Failed to delete order");
+  //   }
+
+  //   return response.json();
+  // },
 
   // Products
   getProducts: async (category?: string) => {

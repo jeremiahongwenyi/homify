@@ -5,6 +5,7 @@ import { apiError, apiSuccess } from "@/helpers/apiResponse";
 export async function GET(req: NextRequest) {
   try {
     const token = req.nextUrl.searchParams.get("token");
+    console.log("token retrieved", token);
 
     if (!token) {
       return apiError({ message: "Tracking token is required." }, 400);
@@ -22,16 +23,27 @@ export async function GET(req: NextRequest) {
         emailVerified: true,
         customerName: true,
         category: true,
+        budgetMax: true,
+        materialPreference: true,
+        colorPreference: true,
         createdAt: true,
         updatedAt: true,
         trackingExpiresAt: true,
+
+        images: {
+          select: {
+            id: true,
+            imageUrl: true,
+          },
+        },
       },
     });
 
     if (!order) {
       return apiError(
         {
-          message: "This tracking link is invalid.",
+          message:
+            " This link is invalid. Please check your email for the correct link.",
         },
         404,
       );
@@ -46,12 +58,7 @@ export async function GET(req: NextRequest) {
       );
     }
 
-    return apiSuccess(
-      {
-        order,
-      },
-      200,
-    );
+    return apiSuccess({ message: "Order retrieved successfully", order }, 200);
   } catch (error) {
     console.error("Track order failed:", error);
     return apiError(

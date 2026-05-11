@@ -54,23 +54,13 @@ export async function GET(req: NextRequest) {
     if (!order) {
       return NextResponse.redirect(buildRedirectUrl("invalid-token"));
     }
-   
     
-
     if (order.emailVerified) {
-      const hasValidTrackingToken =
-        !!order.trackingToken &&
-        (!order.trackingExpiresAt || order.trackingExpiresAt > now);
-
-      if (hasValidTrackingToken) {
         return NextResponse.redirect(
           buildRedirectUrl("already-verified", {
             trackingToken: order.trackingToken || undefined,
           }),
         );
-      }
-
-      return NextResponse.redirect(buildRedirectUrl("already-verified"));
     }
 
     if (!order.tokenExpiresAt || order.tokenExpiresAt < now) {
@@ -88,9 +78,8 @@ export async function GET(req: NextRequest) {
       },
       data: {
         emailVerified: true,
-        status: "PENDING",
-        accessToken: null,
-        tokenExpiresAt: null,
+        status: "UNDER_REVIEW",
+        emailVerifiedAt: new Date(),
         trackingToken,
         trackingExpiresAt,
       },

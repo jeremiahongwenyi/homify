@@ -12,7 +12,7 @@ const getStatusMessage = (status: string) => {
       return {
         title: "Email verified 🎉",
         description:
-          "Thanks for confirming your email. Your custom order is now under review. Our team will reach out shortly with the next steps.",
+          "Thanks for confirming your email. Your custom order is now under review.",
         extra: "You can now track your order using the link below.",
         tone: "success",
       };
@@ -39,7 +39,7 @@ const getStatusMessage = (status: string) => {
       return {
         title: "Invalid verification link",
         description:
-          "This link is not valid or may have been altered. Please request a new verification email.",
+          "This link is not valid or may have been altered. Please use the full tracking link from your email.",
         extra: SUPPORT_TEXT,
         tone: "error",
       };
@@ -48,7 +48,7 @@ const getStatusMessage = (status: string) => {
       return {
         title: "Verification link incomplete",
         description:
-          "This verification link is missing required information. Please use the original link or request a new one.",
+          "This verification link is missing required information. Please use the full tracking link from your email.",
         extra: SUPPORT_TEXT,
         tone: "error",
       };
