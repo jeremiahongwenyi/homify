@@ -434,8 +434,6 @@ Sensitive credentials should never be committed to version control.
 The project follows a feature-oriented structure that separates presentation, business logic, API routes, and shared utilities.
 
 ```
-
-```
 homify/
 │
 ├── app/
