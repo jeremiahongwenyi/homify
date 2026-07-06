@@ -112,8 +112,9 @@ As the platform evolves, the architecture is designed to support future expansio
 | Language | TypeScript | End-to-end type safety |
 
 
-## System Architecture
+## 🏗️ System Architecture
 
+```mermaid
 flowchart LR
 
     User([Customer])
@@ -135,50 +136,14 @@ flowchart LR
     Auth["Better Auth"]
 
     User --> Browser
-
     Browser --> API
-
     API --> Services
-
     Services --> Prisma
-
     Prisma --> DB
-
     Services --> Cloudinary
-
     Services --> Email
-
     Services --> Auth
-
-  
-## Layered Architecture
-
-flowchart TB
-
-UI["Presentation Layer
-Next.js Pages
-React Components"]
-
-API["API Layer
-Route Handlers"]
-
-SERVICE["Business Logic
-Services"]
-
-DATA["Data Access
-Prisma"]
-
-DB[(PostgreSQL)]
-
-UI --> API
-
-API --> SERVICE
-
-SERVICE --> DATA
-
-DATA --> DB
-
-
+```
 ## 🗄️ Database Design
 
 Homify uses PostgreSQL as its primary relational database, with Prisma serving as the Object-Relational Mapper (ORM).
