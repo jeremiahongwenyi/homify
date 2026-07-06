@@ -111,6 +111,20 @@ As the platform evolves, the architecture is designed to support future expansio
 | Email | Nodemailer | Transactional email delivery |
 | Language | TypeScript | End-to-end type safety |
 
+## Architecture Overview
+
+Homify follows a modular monolithic architecture built with the Next.js App Router.
+
+Rather than separating the frontend and backend into independent services, both layers are developed within a single codebase while maintaining clear separation of responsibilities. User interfaces, RESTful APIs, business logic, authentication, and data persistence work together as independent modules, simplifying development while remaining scalable.
+
+This architecture provides several advantages:
+
+- Shared TypeScript types across the frontend and backend
+- Simplified deployment and project structure
+- Clear separation between presentation, business logic, and persistence
+- Faster development without sacrificing maintainability
+
+As the platform evolves, the architecture is designed to support future expansion into independently deployable services where appropriate.
 
 ## 🏗️ System Architecture
 
@@ -144,6 +158,37 @@ flowchart LR
     Services --> Email
     Services --> Auth
 ```
+
+
+## 🏗️ Layered Architecture
+
+```mermaid
+flowchart TB
+
+UI["Presentation Layer
+Next.js Pages
+React Components"]
+
+API["API Layer
+Route Handlers"]
+
+SERVICE["Business Logic
+Services"]
+
+DATA["Data Access
+Prisma"]
+
+DB[(PostgreSQL)]
+
+UI --> API
+
+API --> SERVICE
+
+SERVICE --> DATA
+
+DATA --> DB
+```
+
 ## 🗄️ Database Design
 
 Homify uses PostgreSQL as its primary relational database, with Prisma serving as the Object-Relational Mapper (ORM).
@@ -181,6 +226,7 @@ POST	/api/save-images	Persist uploaded image metadata
 POST	/api/check-email	Verify customer email
 GET	/api/auth/*	Authentication endpoints
 
+```mermaid
 sequenceDiagram
 
 participant Client
@@ -214,6 +260,7 @@ PostgreSQL-->>Prisma: Success
 Prisma-->>API: Order Created
 
 API-->>Client: 201 Created
+```
 
 ## Authentication
 
