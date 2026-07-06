@@ -211,20 +211,21 @@ Relationships are modeled using foreign keys to maintain referential integrity a
 > *The diagram below is generated directly from the Prisma schema to ensure the documentation remains synchronized with the current implementation.*
 
 
-## REST API
+## 🌐 REST API
 
 Homify exposes RESTful API endpoints that power both customer-facing features and backend business workflows.
 
 The APIs are organized by domain, making the application easier to maintain and extend as new functionality is introduced.
 
-Method	Endpoint	Description
-GET	/api/products	Retrieve product catalogue
-POST	/api/products	Create products (Admin)
-POST	/api/custom-order	Submit custom furniture requests
-POST	/api/upload	Upload customer images
-POST	/api/save-images	Persist uploaded image metadata
-POST	/api/check-email	Verify customer email
-GET	/api/auth/*	Authentication endpoints
+| Method | Endpoint | Description |
+|---------|----------|-------------|
+| GET | `/api/products` | Retrieve product catalogue |
+| POST | `/api/products` | Create products (Admin) |
+| POST | `/api/custom-order` | Submit custom furniture requests |
+| POST | `/api/upload` | Upload customer reference images to Cloudinary |
+| POST | `/api/save-images` | Persist uploaded image metadata |
+| POST | `/api/check-email` | Verify customer email |
+| GET | `/api/auth/*` | Authentication endpoints (Better Auth) |
 
 ```mermaid
 sequenceDiagram
@@ -272,6 +273,8 @@ Authentication is designed to protect customer information while providing a sea
 
 By relying on server-side session management and secure authentication workflows, Homify avoids exposing sensitive application state to the client.
 
+
+```mermaid
 sequenceDiagram
 
 participant User
@@ -309,6 +312,7 @@ BetterAuth->>Database: Validate User
 Database-->>BetterAuth: Valid
 
 BetterAuth-->>Frontend: Session Created
+```
 
 ## 🔄 Custom Order Workflow
 
@@ -318,6 +322,8 @@ Unlike standard e-commerce purchases, custom furniture orders require a review a
 
 The workflow below illustrates how a customer request moves through the system from submission to approval.
 
+
+```mermaid
 flowchart LR
 
 A[Customer Submits Request]
@@ -341,6 +347,7 @@ H --> E
 F -->|Decline| I[Rejected]
 
 G --> J[Converted to Order]
+```
 
 
 ## Installation
@@ -455,20 +462,21 @@ homify/
 └── docs/
 ```
 
-
 ### Directory Overview
 
 | Directory | Responsibility |
-|--------------|------------------------------|
-| app | Pages, layouts and API routes |
-| components | Reusable UI components |
-| features | Feature-specific application logic |
-| hooks | Custom React hooks |
-| lib | Shared utilities and services |
-| prisma | Database schema and migrations |
-| generated | Generated Prisma client |
-| public | Static assets |
-| docs | Project documentation |
+|------------|----------------|
+| `app/` | Next.js App Router pages, layouts, and Route Handlers (REST APIs) |
+| `components/` | Reusable UI components shared across the application |
+| `features/` | Feature-specific business logic, components, and state management |
+| `hooks/` | Custom React hooks |
+| `lib/` | Shared utilities, helpers, services, and configuration |
+| `prisma/` | Prisma schema, migrations, and database configuration |
+| `generated/` | Auto-generated Prisma client |
+| `public/` | Static assets (images, icons, fonts, etc.) |
+| `docs/` | Project documentation and architecture diagrams |
+
+The project is organized using a feature-oriented architecture to improve scalability and maintainability. Related components, business logic, hooks, and API interactions are grouped by feature, reducing coupling and making the codebase easier to extend as Homify evolves.
 
 ## Architectural Decisions
 
