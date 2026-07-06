@@ -93,9 +93,6 @@ This architecture provides several advantages:
 
 As the platform evolves, the architecture is designed to support future expansion into independently deployable services where appropriate.
 
-## System Architecture
-
-(Mermaid diagram goes here)
 
 ## Technology Stack
 
@@ -114,13 +111,81 @@ As the platform evolves, the architecture is designed to support future expansio
 | Email | Nodemailer | Transactional email delivery |
 | Language | TypeScript | End-to-end type safety |
 
-## Database Design
+
+## System Architecture
+
+flowchart LR
+
+    User([Customer])
+
+    Browser["Next.js Frontend<br/>(React + App Router)"]
+
+    API["Route Handlers<br/>(REST APIs)"]
+
+    Services["Business Logic"]
+
+    Prisma["Prisma ORM"]
+
+    DB[(PostgreSQL)]
+
+    Cloudinary[(Cloudinary)]
+
+    Email["Email Service"]
+
+    Auth["Better Auth"]
+
+    User --> Browser
+
+    Browser --> API
+
+    API --> Services
+
+    Services --> Prisma
+
+    Prisma --> DB
+
+    Services --> Cloudinary
+
+    Services --> Email
+
+    Services --> Auth
+
+  
+## Layered Architecture
+
+flowchart TB
+
+UI["Presentation Layer
+Next.js Pages
+React Components"]
+
+API["API Layer
+Route Handlers"]
+
+SERVICE["Business Logic
+Services"]
+
+DATA["Data Access
+Prisma"]
+
+DB[(PostgreSQL)]
+
+UI --> API
+
+API --> SERVICE
+
+SERVICE --> DATA
+
+DATA --> DB
+
+
+## 🗄️ Database Design
 
 Homify uses PostgreSQL as its primary relational database, with Prisma serving as the Object-Relational Mapper (ORM).
 
-The current data model focuses on authentication, customer management, and custom furniture requests while remaining flexible enough to support future order management and marketplace functionality.
+The current data model is centered around authentication, customer management, and custom furniture requests. As development continues, the schema will evolve to support additional capabilities such as product management, shopping carts, order processing, inventory management, and multi-vendor functionality.
 
-Core entities include:
+Current core entities include:
 
 - Users
 - Accounts
@@ -129,11 +194,12 @@ Core entities include:
 - Custom Orders
 - Custom Order Images
 
-Relationships are modeled using foreign keys to maintain referential integrity and ensure consistent data across the application.
+Relationships are modeled using foreign keys to maintain referential integrity and ensure data consistency across the application. The database schema is developed iteratively alongside application features, allowing it to evolve naturally as new business requirements emerge.
 
-The schema has been intentionally designed to support future expansion without requiring significant structural changes.
+> **Database ER Diagram**
+>
+> *The diagram below is generated directly from the Prisma schema to ensure the documentation remains synchronized with the current implementation.*
 
-(Database ER Diagram)
 
 ## REST API
 
@@ -150,7 +216,39 @@ POST	/api/save-images	Persist uploaded image metadata
 POST	/api/check-email	Verify customer email
 GET	/api/auth/*	Authentication endpoints
 
-(API Lifecycle Diagram)
+sequenceDiagram
+
+participant Client
+
+participant API
+
+participant Validator
+
+participant Cloudinary
+
+participant Prisma
+
+participant PostgreSQL
+
+Client->>API: POST /api/custom-order
+
+API->>Validator: Validate Payload (Zod)
+
+Validator-->>API: Valid
+
+API->>Cloudinary: Upload Images
+
+Cloudinary-->>API: Image URLs
+
+API->>Prisma: Create Order
+
+Prisma->>PostgreSQL: Persist Data
+
+PostgreSQL-->>Prisma: Success
+
+Prisma-->>API: Order Created
+
+API-->>Client: 201 Created
 
 ## Authentication
 
@@ -162,7 +260,76 @@ Authentication is designed to protect customer information while providing a sea
 
 By relying on server-side session management and secure authentication workflows, Homify avoids exposing sensitive application state to the client.
 
-(Authentication Flow Diagram)
+sequenceDiagram
+
+participant User
+
+participant Frontend
+
+participant API
+
+participant BetterAuth
+
+participant Database
+
+User->>Frontend: Register
+
+Frontend->>API: POST /sign-up
+
+API->>BetterAuth: Create Account
+
+BetterAuth->>Database: Save User
+
+Database-->>BetterAuth: Success
+
+BetterAuth-->>Frontend: Verification Required
+
+Frontend-->>User: Check Email
+
+User->>Frontend: Verify Email
+
+Frontend->>API: Login
+
+API->>BetterAuth: Authenticate
+
+BetterAuth->>Database: Validate User
+
+Database-->>BetterAuth: Valid
+
+BetterAuth-->>Frontend: Session Created
+
+## 🔄 Custom Order Workflow
+
+One of Homify's core features is enabling customers to request custom-built furniture using reference images and project specifications.
+
+Unlike standard e-commerce purchases, custom furniture orders require a review and quotation process before becoming confirmed orders. Homify models this workflow as a series of clearly defined states, allowing both customers and administrators to track the progress of each request.
+
+The workflow below illustrates how a customer request moves through the system from submission to approval.
+
+flowchart LR
+
+A[Customer Submits Request]
+
+--> B[Awaiting Email Verification]
+
+--> C[Pending]
+
+--> D[Under Review]
+
+--> E[Quoted]
+
+--> F{Customer Decision}
+
+F -->|Accept| G[Approved]
+
+F -->|Negotiate| H[Negotiation]
+
+H --> E
+
+F -->|Decline| I[Rejected]
+
+G --> J[Converted to Order]
+
 
 ## Installation
 
