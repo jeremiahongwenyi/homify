@@ -31,10 +31,16 @@ export function ProductCatalog() {
     queryFn: () => api.getProducts(),
   });
 
+  // if(allProducts.length === 0) return
+
   // Filter and sort products
   const filteredProducts = useMemo(() => {
+
+    if (!Array.isArray(allProducts)) return [];
+    
     let filtered = allProducts;
     console.log ('Am in filtered products')
+    
     // Category filter
     if (selectedCategory && selectedCategory !== "all") {
       filtered = filtered.filter((p) => p.category === selectedCategory);

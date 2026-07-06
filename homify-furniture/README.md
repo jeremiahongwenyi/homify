@@ -2,6 +2,8 @@
 
 **Tagline:** Custom comfort for modern living
 
+Live URL: https://homify-furniture.vercel.app/
+
 Homify Furniture is a web-based e-commerce platform designed for a single furniture store in Kenya. The platform allows customers to browse ready-made furniture, request custom furniture using reference images, communicate with the seller via WhatsApp, 
 
 This project is developed as a **final capstone project for ALX Software Engineering**, with a strong focus on real-world applicability, clean architecture, and scope control.

@@ -130,31 +130,32 @@ export function UploadWithAPI({
     [files, previews, autoUpload, onUploadComplete],
   );
 
-  // In your UploadWithAPI component
   const handleUpload = async () => {
     if (files.length === 0) return;
 
     setUploading(true);
     setError(null);
 
-    try {
-      // Upload files via API route
-      const results = await api.uploadMultipleImages(files, folder);
-      console.log("Upload results:", results);
+    console.log('just sending files to the parent');
+    
+    // try {
+    //   // Upload files via API route
+    //   const results = await api.uploadMultipleImages(files, folder);
+    //   console.log("Upload results:", results);
 
-      // Check if upload was successful
-      if (results && results.length > 0) {
-        setUploadedResults(results);
-        onUploadComplete(results);
-      } else {
-        throw new Error("No results returned");
-      }
-    } catch (err: any) {
-      setError(err.message || "Upload failed. Please try again.");
-      console.error("Upload error:", err);
-    } finally {
-      setUploading(false);
-    }
+    //   // Check if upload was successful
+    //   if (results && results.length > 0) {
+    //     setUploadedResults(results);
+    //     onUploadComplete(results);
+    //   } else {
+    //     throw new Error("No results returned");
+    //   }
+    // } catch (err: any) {
+    //   setError(err.message || "Upload failed. Please try again.");
+    //   console.error("Upload error:", err);
+    // } finally {
+    //   setUploading(false);
+    // }
   };
 
   const handleDragOver = useCallback((e: React.DragEvent) => {
@@ -180,9 +181,9 @@ export function UploadWithAPI({
       <div className="flex items-center justify-between">
         <div>
           <h3 className="font-medium">Upload Images</h3>
-          <p className="text-sm text-gray-500">
+          {/* <p className="text-sm text-gray-500">
             Images will be optimized and stored on Cloudinary
-          </p>
+          </p> */}
         </div>
 
         {files.length > 0 && !uploading && autoUpload && (

@@ -1,32 +1,38 @@
 const API_BASE = "/api";
+import { emailVerificationSchema } from "@/schemas/auth";
+import type { CustomOrder } from "@/types/custom-orders";
 
 export const api = {
-  // Upload to Cloudinary
-  uploadImage: async (
-    file: File,
+  createCustomOrder: async (
+    files: File[],
+    order: CustomOrder,
     folder?: string,
-  ): Promise<{ url: string; publicId: string; success: boolean }> => {
-    const formData = new FormData();
-    formData.append("file", file);
-    if (folder) formData.append("folder", folder);
+  ) => {
+    console.log("Images received", files);
+    console.log("order received", order);
 
-    const response = await fetch(`${API_BASE}/upload`, {
-      method: "POST",
-      body: formData,
-    });
+    try {
+      const formData = new FormData();
+      formData.append("order", JSON.stringify(order));
+      formData.append("folder", folder || "custom-orders");
+      files.forEach((file) => formData.append("files", file));
 
-    const data = await response.json();
-    
-    if (!response.ok) {
-      throw new Error(data.error || "Upload failed");
+      const response = await fetch(`${API_BASE}/custom-order`, {
+        method: "POST",
+        body: formData,
+      });
+
+      const res = await response.json();
+
+      if (!response.ok || !res.success) {
+        throw new Error(res?.error?.message || "Failed to create custom order");
+      }
+
+      return res?.data?.message || "Order submitted successfully.";
+    } catch (error: any) {
+      console.log("error occured in createorder method", error);
+      throw error;
     }
-
-    return data;
-  },
-
-  uploadMultipleImages: async (files: File[], folder?: string) => {
-    const uploadPromises = files.map((file) => api.uploadImage(file, folder));
-    return Promise.all(uploadPromises);
   },
 
   deleteImage: async (publicId: string) => {
@@ -44,41 +50,44 @@ export const api = {
   },
 
   // Orders
-  getOrders: async (limit?: number) => {
-    const url = limit
-      ? `${API_BASE}/orders?limit=${limit}`
-      : `${API_BASE}/orders`;
-    const response = await fetch(url);
-    return response.json();
-  },
 
-  createOrder: async (orderData: any) => {
-    const response = await fetch(`${API_BASE}/orders`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(orderData),
-    });
+  getOrder: async (token: string) => {
+    const response = await fetch(
+      `${API_BASE}/custom-order/get-order?token=${encodeURIComponent(token)}`,
+      {
+        method: "GET",
+      },
+    );
 
-    if (!response.ok) {
-      throw new Error("Failed to create order");
+    const res = await response.json();
+    if (!response.ok || !res.success) {
+      throw new Error(res?.error?.message || "Failed to fetch order");
     }
 
-    return response.json();
+    const { order } = res.data;
+    return order;
   },
+  // getOrders: async (limit?: number) => {
+  //   const url = limit
+  //     ? `${API_BASE}/orders?limit=${limit}`
+  //     : `${API_BASE}/orders`;
+  //   const response = await fetch(url);
+  //   return response.json();
+  // },
 
-  deleteOrder: async (orderId: string) => {
-    const response = await fetch(`${API_BASE}/orders`, {
-      method: "DELETE",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ orderId }),
-    });
+  // deleteOrder: async (orderId: string) => {
+  //   const response = await fetch(`${API_BASE}/orders`, {
+  //     method: "DELETE",
+  //     headers: { "Content-Type": "application/json" },
+  //     body: JSON.stringify({ orderId }),
+  //   });
 
-    if (!response.ok) {
-      throw new Error("Failed to delete order");
-    }
+  //   if (!response.ok) {
+  //     throw new Error("Failed to delete order");
+  //   }
 
-    return response.json();
-  },
+  //   return response.json();
+  // },
 
   // Products
   getProducts: async (category?: string) => {
@@ -105,6 +114,21 @@ export const api = {
       throw new Error("Failed to save product");
     }
 
+    return response.json();
+  },
+
+  checkEmail: async (email: string) => {
+    emailVerificationSchema.parse({ email });
+
+    const response = await fetch(`${API_BASE}/check-email`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ email }),
+    });
+
+    if (!response.ok) {
+      throw new Error("Email verification failed");
+    }
     return response.json();
   },
 };

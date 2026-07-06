@@ -1,4 +1,4 @@
-"use client"
+"use client";
 
 import { X, Plus, Minus, Trash2, ShoppingBag } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -6,13 +6,29 @@ import { useCart } from "@/store/hooks";
 import { formatPrice } from "@/data/products";
 import Link from "next/link";
 import { toast } from "sonner";
-
+import { CheckOutAuthDialog } from "@/components/auth/CheckOutAuthDialog";
+import { useState } from "react";
+import { useRouter } from "next/navigation";
+import { Product } from "@/types/product";
 
 export default function CartSidebar() {
+  const router = useRouter()
   const { items, total, isOpen, closeCart, updateQuantity, removeItem } =
     useCart();
 
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [showAuthDialog, setShowAuthDialog] = useState(false);
+
   if (!isOpen) return null;
+
+  const proceedToCheckOut = ()=>{
+    if(isAuthenticated){
+      closeCart()
+      router.push('/checkout')
+    } else {
+      setShowAuthDialog(true)
+    }
+  }
 
   return (
     <>
@@ -114,11 +130,11 @@ export default function CartSidebar() {
               <p className="text-xs text-muted-foreground">
                 Shipping calculated at checkout
               </p>
-              <Button className="w-full" size="lg" asChild onClick={()=>toast.error("Coming soon")}>
-                 {/* Proceed to Checkout */}
-                <Link href="" onClick={closeCart}>
+              <Button className="w-full" size="lg" onClick= {proceedToCheckOut}>
+                {/* Proceed to Checkout */}
+                {/* <Link href="/products" onClick={closeCart}> */}
                   Proceed to Checkout
-                </Link>
+                {/* </Link> */}
               </Button>
               <Button
                 variant="outline"
@@ -128,6 +144,17 @@ export default function CartSidebar() {
               >
                 <Link href="/products">Continue Shopping</Link>
               </Button>
+            </div>
+
+            <div>
+              <CheckOutAuthDialog
+                open={!isAuthenticated && showAuthDialog}
+                onOpenChange={setShowAuthDialog}
+                onAuthenticated={() => {
+                  setIsAuthenticated(true);
+                  setShowAuthDialog(false);
+                }}
+              ></CheckOutAuthDialog>
             </div>
           </>
         )}

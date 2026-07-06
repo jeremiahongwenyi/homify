@@ -8,6 +8,7 @@ import { type CategoryId } from "@/types/product";
 import { CategoryBar } from "@/components/products/CategoryBar";
 import { ProductCatalog } from "@/components/products/ProductCatalog";
 
+
 function ProductsPageContent() {
   const dispatch = useAppDispatch();
   const router = useRouter();
@@ -64,6 +65,8 @@ function ProductsPageContent() {
       <div className="container py-8 md:py-12">
         <ProductCatalog />
       </div>
+
+     
     </main>
   );
 }

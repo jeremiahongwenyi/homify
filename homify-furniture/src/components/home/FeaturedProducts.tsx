@@ -26,7 +26,7 @@ export  default function FeaturedProducts() {
           </Button>
         </div>
 
-        <ProductGrid />
+        {/* <ProductGrid /> */}
       </div>
     </section>
   );

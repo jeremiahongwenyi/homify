@@ -1,6 +1,7 @@
 // /app/api/upload/route.ts - UPDATED
 import { NextRequest, NextResponse } from 'next/server';
 import cloudinary from '@/lib/cloudinary';
+import { apiError, apiSuccess } from '@/helpers/apiResponse';
 
 export async function POST(request: NextRequest) {
   try {
@@ -9,10 +10,7 @@ export async function POST(request: NextRequest) {
     const folder = formData.get('folder') as string || 'furniture-products';
 
     if (!file) {
-      return NextResponse.json(
-        { error: 'No file provided' },
-        { status: 400 }
-      );
+      return apiError({message:'No file provided'}, 400)
     }
 
     // Convert file to base64 for Cloudinary
@@ -31,28 +29,17 @@ export async function POST(request: NextRequest) {
       resource_type: 'auto',
     });
 
-    return NextResponse.json({
-      success: true,
-      url: result.secure_url,
+    return apiSuccess({message: 'File uploaded successfully', url: result.secure_url,
       publicId: result.public_id,
       width: result.width,
       height: result.height,
       format: result.format,
-      bytes: result.bytes,
-    });
+      bytes: result.bytes}, 201)
 
   } catch (error: any) {
-    console.error('Upload error:', error);
-    
+    console.error('Upload error:', error); 
     // More detailed error response
-    return NextResponse.json(
-      { 
-        error: 'Upload failed',
-        details: error.message,
-        code: error.http_code || 500
-      },
-      { status: 500 }
-    );
+     return apiError({message:'File upload failed'}, 500)
   }
 }
 

@@ -1,0 +1,114 @@
+generator client {
+  provider = "prisma-client"
+  output   = "../generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model account {
+  id                    String    @id
+  accountId             String
+  providerId            String
+  userId                String
+  accessToken           String?
+  refreshToken          String?
+  idToken               String?
+  accessTokenExpiresAt  DateTime? @db.Timestamptz(6)
+  refreshTokenExpiresAt DateTime? @db.Timestamptz(6)
+  scope                 String?
+  password              String?
+  createdAt             DateTime  @default(now()) @db.Timestamptz(6)
+  updatedAt             DateTime  @db.Timestamptz(6)
+  user                  user      @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: NoAction)
+
+  @@index([userId])
+}
+
+model session {
+  id        String   @id
+  expiresAt DateTime @db.Timestamptz(6)
+  token     String   @unique
+  createdAt DateTime @default(now()) @db.Timestamptz(6)
+  updatedAt DateTime @db.Timestamptz(6)
+  ipAddress String?
+  userAgent String?
+  userId    String
+  user      user     @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: NoAction)
+
+  @@index([userId])
+}
+
+model user {
+  id            String    @id
+  name          String
+  email         String    @unique
+  phone_number  String
+  emailVerified Boolean
+  image         String?
+  createdAt     DateTime  @default(now()) @db.Timestamptz(6)
+  updatedAt     DateTime  @default(now()) @db.Timestamptz(6)
+  role          String   @default("user") // ✅ default value
+  account       account[]
+  session       session[]
+}
+
+model verification {
+  id         String   @id
+  identifier String
+  value      String
+  expiresAt  DateTime @db.Timestamptz(6)
+  createdAt  DateTime @default(now()) @db.Timestamptz(6)
+  updatedAt  DateTime @default(now()) @db.Timestamptz(6)
+
+  @@index([identifier])
+}
+
+model CustomOrder {
+  id                    String   @id @default(uuid())
+  userId                String?
+  customerName          String?
+  customerEmail         String
+  customerPhone         String?
+  description           String?
+  category              String?
+  budgetMax             Float?
+  budgetMin             Float?
+  dimensions            String?
+  materialPreference    String?
+  colorPreference       String?
+  status                CustomOrderStatus @default(AWAITING_EMAIL_VERIFICATION)
+  emailVerified         Boolean  @default(false)
+  emailVerifiedAt       DateTime?
+  accessToken           String? @unique
+  tokenExpiresAt        DateTime?
+  trackingToken         String?  @unique
+  trackingExpiresAt     DateTime?
+  createdAt             DateTime @default(now())
+  updatedAt             DateTime @updatedAt
+  images                CustomOrderImage[]
+}
+
+
+  
+model CustomOrderImage {
+  id                  String   @id @default(uuid())
+  customOrderId       String
+  imageUrl            String
+  publicId            String 
+  customOrder         CustomOrder @relation(fields: [customOrderId], references: [id])
+}
+
+
+enum CustomOrderStatus {
+  AWAITING_EMAIL_VERIFICATION
+  PENDING
+  UNDER_REVIEW
+  QUOTED
+  NEGOTIATION
+  APPROVED
+  REJECTED
+  EXPIRED
+  CONVERTED_TO_ORDER
+}
