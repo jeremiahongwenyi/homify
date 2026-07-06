@@ -1,163 +1,457 @@
-# 🛋️ Homify Furniture
+# 🛋️ Homify
 
-**Tagline:** Custom comfort for modern living
+> **A Modern Full-Stack Commerce Platform for Furniture Businesses**
 
-Homify Furniture is a web-based e-commerce platform designed for a single furniture store in Kenya. The platform allows customers to browse ready-made furniture, request custom furniture using reference images, communicate with the seller via WhatsApp, 
+<p align="center">
+    <img src="./docs/images/hero.png" alt="Homify Homepage"/>
+</p>
 
-This project is developed as a **final capstone project for ALX Software Engineering**, with a strong focus on real-world applicability, clean architecture, and scope control.
+Homify is a modern full-stack web application that helps furniture businesses showcase products, manage customer enquiries, and streamline custom furniture requests through a fast, intuitive digital experience.
 
----
+**Status:** 🚧 Actively Under Development
 
-## 📌 Table of Contents
+## Overview
 
-* Overview
-* Problem Statement
-* Solution Overview
-* Key Features
-* User Journeys
-* Tech Stack
-* System Architecture
-* Installation & Setup
-* Environment Variables
-* Usage
-* Scope Control
-* Future Improvements
-* Author
+Homify is a full-stack commerce platform built to modernize how furniture businesses engage with customers online. It combines a responsive storefront with backend services that support authentication, product management, custom furniture requests, image uploads, and business workflows.
 
----
+The project originated as a software engineering capstone but has since evolved into a long-term engineering project focused on exploring modern full-stack development, backend architecture, and cloud-native application design.
 
-## 🔍 Overview
+Rather than treating the backend as an afterthought, Homify is being developed as a complete software system where user experience, business logic, and infrastructure evolve together.
 
-Furniture shopping in Kenya is largely informal, relying on walk-in visits, phone calls, and WhatsApp messages. This makes it difficult for customers to browse products, request custom designs, receive quotations, and place orders in a structured way.
+## Why Homify?
 
-Homify Furniture digitizes these processes by providing a modern, user-friendly web platform that connects customers directly with a furniture store.
+Furniture businesses often rely on walk-in customers, phone calls, and messaging platforms to showcase products, discuss custom furniture requirements, and process orders. While these methods are familiar, they frequently lead to fragmented communication, manual processes, and limited visibility into customer requests.
 
----
+Homify addresses these challenges by providing a centralized platform where customers can discover products, submit custom furniture requests, and interact with the business through a structured digital experience.
 
-## ❗ Problem Statement
+By combining a modern frontend with a robust backend, the platform aims to simplify business operations while improving the overall customer experience.
 
-Many customers struggle to find affordable and customizable furniture online, while furniture stores lack structured systems for showcasing products, managing orders, and handling custom requests. This results in inefficient communication, lost sales opportunities, and poor customer experience.
+## Project Goals
 
----
+Homify is guided by four primary objectives:
 
-## 💡 Solution Overview
+### Deliver an Exceptional Customer Experience
 
-Homify Furniture provides:
+Build an intuitive platform that enables customers to browse products, request custom furniture, and communicate seamlessly with the business.
 
-* An online furniture catalog
-* A structured checkout experience
-* Custom furniture requests via image uploads
-* Seller communication via WhatsApp
+### Build a Modern Full-Stack Architecture
 
+Implement a scalable backend using RESTful APIs, relational databases, authentication, and server-side validation while maintaining a clean and maintainable codebase.
 
-The platform focuses on a **single furniture store** to ensure realistic scope and full feature delivery.
+### Digitize Furniture Businesses
 
----
+Provide businesses with tools for managing products, customer enquiries, and custom furniture workflows from a single platform.
 
-## ✨ Key Features
+### Continuously Evolve
 
-### Customer Features
+Use Homify as a long-term engineering project to explore modern backend development, cloud architecture, DevOps practices, and scalable software design.
 
-* Browse furniture by category
-* View detailed product information
-* Add items to cart
-* Upload images for custom furniture requests
-* Chat with seller via WhatsApp
+## Current Functionality
 
+Homify is currently focused on delivering the core functionality required by a modern furniture commerce platform. Development is being carried out iteratively, with each feature designed to integrate into a scalable long-term architecture rather than existing in isolation.
 
-## 🔄 User Journeys
+### Customer Experience
 
-### 1. Standard Browse Flow
+- Browse a curated furniture catalogue
+- View detailed product information
+- Submit custom furniture requests
+- Upload reference images
+- Create and manage user accounts
+- Secure authentication and session management
+- Responsive user experience across desktop and mobile devices
 
-Home → Browse Furniture → Product Details → Add to Cart
+### Backend Services
 
-### 2. Custom Furniture Request Flow
+- RESTful API endpoints built with Next.js Route Handlers
+- Authentication and authorization using Better Auth
+- PostgreSQL database with Prisma ORM
+- Request validation using Zod
+- Image storage and management through Cloudinary
+- Email verification for customer workflows
 
-Home → Custom Request → Upload Image → Add Description → Submit Request 
+### Currently in Development
 
-### 3. WhatsApp Chat Flow
+- Shopping cart
+- Checkout workflow
+- Order management
+- Admin dashboard
+- Product management
+- MPesa payment integration
 
-Product Page → Chat Seller on WhatsApp → Redirect to WhatsApp with Pre-filled Message
+  ## Architecture Overview
 
----
+Homify follows a modular monolithic architecture built with the Next.js App Router.
 
-## 🛠️ Tech Stack
+Rather than separating the frontend and backend into independent services, both layers are developed within a single codebase while maintaining clear separation of responsibilities. User interfaces, RESTful APIs, business logic, authentication, and data persistence work together as independent modules, simplifying development while remaining scalable.
 
-### Frontend
+This architecture provides several advantages:
 
-* Next.js
-* React
-* Tailwind CSS
+- Shared TypeScript types across the frontend and backend
+- Simplified deployment and project structure
+- Clear separation between presentation, business logic, and persistence
+- Faster development without sacrificing maintainability
 
-### Backend
+As the platform evolves, the architecture is designed to support future expansion into independently deployable services where appropriate.
 
-Backend
+## System Architecture
 
-This project does not use a traditional fully fledged backend server.
+(Mermaid diagram goes here)
 
-Instead, it leverages Firebase to handle backend functionality database and Cloudinary for image storage.
+## Technology Stack
 
-Firebase Firestore (NoSQL Database)
+| Layer | Technology | Purpose |
+|---------|------------|---------|
+| Frontend | Next.js 16, React 19 | User interface and application framework |
+| Backend | Next.js Route Handlers | RESTful API development |
+| Database | PostgreSQL | Persistent relational data storage |
+| ORM | Prisma | Database access and schema management |
+| Authentication | Better Auth | Authentication and session management |
+| Validation | Zod | Request validation and type safety |
+| State Management | Redux Toolkit | Client-side state management |
+| Server State | TanStack Query | API data fetching and caching |
+| Styling | Tailwind CSS | Responsive user interface styling |
+| Image Storage | Cloudinary | Customer image uploads |
+| Email | Nodemailer | Transactional email delivery |
+| Language | TypeScript | End-to-end type safety |
 
-Cloudinary (image uploads)
+## Database Design
 
+Homify uses PostgreSQL as its primary relational database, with Prisma serving as the Object-Relational Mapper (ORM).
 
-### Database
-Firebase Firestore (NoSQL, cloud-hosted)
+The current data model focuses on authentication, customer management, and custom furniture requests while remaining flexible enough to support future order management and marketplace functionality.
 
-Firebase is used to simplify development, reduce backend complexity, and focus on delivering a complete, functional solution suitable for the project scope.
+Core entities include:
 
+- Users
+- Accounts
+- Sessions
+- Verification Tokens
+- Custom Orders
+- Custom Order Images
 
-## 🧱 System Architecture (High Level)
+Relationships are modeled using foreign keys to maintain referential integrity and ensure consistent data across the application.
 
-* Client (Next.js)
-* Backend API (Firebase)
-* External Services (WhatsApp)
+The schema has been intentionally designed to support future expansion without requiring significant structural changes.
 
----
+(Database ER Diagram)
 
-## ⚙️ Installation & Setup
+## REST API
+
+Homify exposes RESTful API endpoints that power both customer-facing features and backend business workflows.
+
+The APIs are organized by domain, making the application easier to maintain and extend as new functionality is introduced.
+
+Method	Endpoint	Description
+GET	/api/products	Retrieve product catalogue
+POST	/api/products	Create products (Admin)
+POST	/api/custom-order	Submit custom furniture requests
+POST	/api/upload	Upload customer images
+POST	/api/save-images	Persist uploaded image metadata
+POST	/api/check-email	Verify customer email
+GET	/api/auth/*	Authentication endpoints
+
+(API Lifecycle Diagram)
+
+## Authentication
+
+Authentication is implemented using Better Auth with PostgreSQL-backed session storage.
+
+The current implementation supports secure user registration, login, email verification, session management, and role-based authorization.
+
+Authentication is designed to protect customer information while providing a seamless user experience across the application.
+
+By relying on server-side session management and secure authentication workflows, Homify avoids exposing sensitive application state to the client.
+
+(Authentication Flow Diagram)
+
+## Installation
+
+### Prerequisites
+
+Before running Homify locally, ensure the following tools are installed:
+
+- Node.js 20+
+- npm
+- PostgreSQL
+- Git
+
+### Clone the Repository
 
 ```bash
-# Clone the repository
-git clone https://github.com/jeremiahongwenyi/alx-project-nexus.git
+git clone https://github.com/jeremiahongwenyi/homify.git
 
-# Navigate to project directory
-cd homify-furniture
+cd homify
+```
 
-# Install dependencies
+### Install Dependencies
+
+```bash
 npm install
+```
 
-# Run development server
+### Configure Environment Variables
+
+Create a `.env` file in the project root and configure the required environment variables.
+
+```bash
+cp .env.example .env
+```
+
+### Generate Prisma Client
+
+```bash
+npx prisma generate
+```
+
+### Apply Database Migrations
+
+```bash
+npx prisma migrate dev
+```
+
+### Start the Development Server
+
+```bash
 npm run dev
 ```
 
+The application will be available at:
 
-## ▶️ Usage
+```
+http://localhost:3000
+```
 
-* Browse products without authentication
-* Upload reference images for custom furniture
+## Environment Variables
+
+Homify integrates with several external services for authentication, database access, image storage, and email delivery.
+
+The following environment variables are required:
+
+| Variable | Purpose |
+|------------|--------------------------------|
+| DATABASE_URL | PostgreSQL database connection |
+| BETTER_AUTH_SECRET | Authentication secret |
+| BETTER_AUTH_URL | Application URL |
+| CLOUDINARY_CLOUD_NAME | Cloudinary account |
+| CLOUDINARY_API_KEY | Cloudinary API Key |
+| CLOUDINARY_API_SECRET | Cloudinary API Secret |
+| SMTP_HOST | SMTP Server |
+| SMTP_PORT | SMTP Port |
+| SMTP_USER | Email username |
+| SMTP_PASSWORD | Email password |
+| NEXT_PUBLIC_APP_URL | Frontend application URL |
+
+Sensitive credentials should never be committed to version control.
+
+## Project Structure
+
+The project follows a feature-oriented structure that separates presentation, business logic, API routes, and shared utilities.
+
+```
+
+```
+homify/
+│
+├── app/
+│   ├── (public)/
+│   ├── (auth)/
+│   ├── admin/
+│   ├── api/
+│   └── globals.css
+│
+├── components/
+│
+├── features/
+│
+├── hooks/
+│
+├── lib/
+│
+├── prisma/
+│
+├── public/
+│
+├── generated/
+│
+└── docs/
+```
 
 
-## 🚀 Future Improvements
-* User registration and login
-* Secure checkout with customer verification
-* MPESA payment initiation (Daraja sandbox)
-* Multi-vendor marketplace support
-* Real MPESA production integration
-* Real-time chat system
-* Automated courier API integration
-* Delivery fee calculation
+### Directory Overview
 
+| Directory | Responsibility |
+|--------------|------------------------------|
+| app | Pages, layouts and API routes |
+| components | Reusable UI components |
+| features | Feature-specific application logic |
+| hooks | Custom React hooks |
+| lib | Shared utilities and services |
+| prisma | Database schema and migrations |
+| generated | Generated Prisma client |
+| public | Static assets |
+| docs | Project documentation |
 
-## 👤 Author
+## Architectural Decisions
 
-**Jeremiah Ongwenyi Omare**
-ALX Software Engineering Student
+Every major technology in Homify was selected to solve a specific engineering problem. Rather than adopting tools based solely on popularity, each decision was made by considering the project's current requirements, long-term vision, maintainability, and developer experience.
+
+### Why Next.js App Router?
+
+Homify is built using the Next.js App Router to unify the frontend, backend, and routing within a modern React architecture.
+
+**Why this approach?**
+
+- Supports React Server Components and server rendering
+- Simplifies project organization through file-based routing
+- Enables colocating pages, layouts, and API routes
+- Provides an excellent TypeScript developer experience
+
+**Trade-off:** The App Router has a steeper learning curve than the traditional Pages Router, but its long-term architectural benefits outweigh the additional complexity.
 
 ---
 
-## 📄 License
+### Why Route Handlers Instead of a Separate Backend?
 
-This project is for educational purposes as part of the ALX Software Engineering Program.
+Rather than introducing a standalone backend framework such as Express, Homify uses Next.js Route Handlers to expose its REST APIs.
+
+**Why this approach?**
+
+- Keeps the frontend and backend within a single codebase
+- Enables shared TypeScript types across the application
+- Simplifies deployment and project maintenance
+- Maintains a clear separation between UI and business logic
+
+**Trade-off:** A dedicated backend may offer greater flexibility for independently scalable services, but Route Handlers provide all the backend capabilities Homify currently requires while keeping the architecture simple.
+
+---
+
+### Why PostgreSQL & Prisma?
+
+Homify uses PostgreSQL with Prisma ORM to provide a reliable, scalable, and type-safe data layer.
+
+**Why this approach?**
+
+- PostgreSQL provides strong relational modelling and ACID-compliant transactions
+- Prisma offers type-safe database access and automatic TypeScript generation
+- Built-in migrations simplify schema evolution
+- Improves maintainability and developer productivity
+
+**Trade-off:** ORMs abstract much of SQL, which can reduce flexibility for highly specialized queries. For Homify, the productivity and type safety significantly outweigh this limitation.
+
+---
+
+### Why Better Auth?
+
+Authentication is implemented using Better Auth with PostgreSQL-backed session storage.
+
+**Why this approach?**
+
+- Secure authentication and session management
+- Minimal configuration with excellent TypeScript support
+- Database-backed sessions improve security and reliability
+- Allows development to focus on business functionality instead of authentication infrastructure
+
+**Trade-off:** Better Auth has a smaller ecosystem than more established authentication solutions, but its simplicity, type safety, and developer experience make it an excellent fit for Homify.
+
+---
+
+### Why Zod?
+
+Every incoming API request is validated using Zod before business logic is executed.
+
+**Why this approach?**
+
+- Prevents invalid or malformed requests
+- Produces consistent API error responses
+- Improves application reliability
+- Keeps API contracts explicit and type-safe
+
+**Trade-off:** Schema validation introduces a small processing overhead, but the improvements in reliability and maintainability make it a worthwhile investment.
+
+---
+
+### Why Cloudinary?
+
+Customer-uploaded images are managed through Cloudinary rather than storing files directly within the application.
+
+**Why this approach?**
+
+- Secure cloud-based file storage
+- Automatic image optimization
+- Global CDN delivery for faster loading
+- Simplifies media management and scalability
+
+**Trade-off:** Introducing a third-party service creates an external dependency, but the performance, reliability, and operational simplicity far outweigh managing media infrastructure internally. 
+## Roadmap
+
+Homify is under active development, with new functionality being introduced incrementally.
+
+### Short-Term Goals
+
+- Complete shopping cart
+- Complete checkout workflow
+- Product management
+- Admin dashboard
+- Order management
+- Customer order tracking
+
+### Mid-Term Goals
+
+- MPesa payment integration
+- Email notifications
+- Inventory management
+- Sales analytics
+- Role-based administration
+
+### Long-Term Vision
+
+The long-term vision is to evolve Homify into a production-ready commerce platform capable of supporting multiple furniture businesses through a shared marketplace architecture.
+
+Future iterations will explore:
+
+- Multi-vendor support
+- Cloud deployment on AWS
+- Containerized deployments with Docker
+- Background job processing
+- Search and recommendation services
+- CI/CD automation
+
+## Lessons Learned
+
+Building Homify has been as much about engineering growth as it has been about delivering software.
+
+Throughout the project, I have strengthened my understanding of:
+
+- Designing RESTful APIs
+- Relational database modelling with PostgreSQL
+- Authentication and session management
+- Server-side validation
+- File upload workflows
+- Backend architecture using Next.js Route Handlers
+- ORM-based database access with Prisma
+- Building maintainable full-stack applications
+
+Perhaps the biggest lesson has been recognizing that good software architecture is not about adding complexity—it's about making thoughtful decisions that allow systems to evolve over time.
+
+## Contributing
+
+Homify is currently a personal project and is under active development.
+
+Feedback, ideas, and constructive discussions are always welcome.
+
+If you'd like to contribute, feel free to fork the repository, open an issue, or submit a pull request.
+
+## Author
+
+**Jeremiah Ongwenyi**
+
+Software Engineer
+
+- LinkedIn
+- Portfolio
+- Email
+
+
+
+
 
