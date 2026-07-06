@@ -428,53 +428,61 @@ The following environment variables are required:
 | NEXT_PUBLIC_APP_URL | Frontend application URL |
 
 Sensitive credentials should never be committed to version control.
+## 🏗️ Codebase Architecture
 
-## Project Structure
+The project follows a feature-oriented architecture that separates presentation, business logic, API routes, data access, and shared utilities. This structure promotes maintainability, scalability, and a clear separation of concerns as the application continues to evolve.
 
-The project follows a feature-oriented structure that separates presentation, business logic, API routes, and shared utilities.
-
-```
+```text
 homify/
 │
-├── app/
-│   ├── (public)/
-│   ├── (auth)/
-│   ├── admin/
-│   ├── api/
-│   └── globals.css
+├── src/
+│   ├── app/
+│   │   ├── api/               # Next.js Route Handlers (REST APIs)
+│   │   └── globals.css
+│   │
+│   ├── components/            # Shared UI components
+│   │
+│   ├── features/              # Feature-based modules
+│   │
+│   ├── hooks/                 # Custom React hooks
+│   │
+│   ├── lib/                   # Utilities, configuration & shared services
+│   │
+│   ├── providers/             # Redux, React Query & application providers
+│   │
+│   ├── schemas/               # Zod validation schemas
+│   │
+│   ├── services/              # Business services & interfaces
+│   │
+│   └── types/                 # Shared TypeScript types
 │
-├── components/
+├── prisma/                    # Prisma schema & database migrations
 │
-├── features/
+├── generated/                 # Auto-generated Prisma client
 │
-├── hooks/
+├── public/                    # Static assets
 │
-├── lib/
-│
-├── prisma/
-│
-├── public/
-│
-├── generated/
-│
-└── docs/
+└── docs/                      # Project documentation
 ```
 
 ### Directory Overview
 
 | Directory | Responsibility |
 |------------|----------------|
-| `app/` | Next.js App Router pages, layouts, and Route Handlers (REST APIs) |
-| `components/` | Reusable UI components shared across the application |
-| `features/` | Feature-specific business logic, components, and state management |
-| `hooks/` | Custom React hooks |
-| `lib/` | Shared utilities, helpers, services, and configuration |
-| `prisma/` | Prisma schema, migrations, and database configuration |
-| `generated/` | Auto-generated Prisma client |
+| `src/` | Root source directory containing the application code |
+| `src/app/` | Next.js App Router pages, layouts, and Route Handlers (REST APIs) |
+| `src/components/` | Reusable UI components shared across the application |
+| `src/features/` | Feature-oriented modules containing business logic and UI |
+| `src/hooks/` | Custom React hooks |
+| `src/lib/` | Shared utilities, helpers, configuration, and common services |
+| `src/providers/` | Application providers including Redux, React Query, Theme, and Authentication |
+| `src/schemas/` | Zod schemas for request validation and type-safe API contracts |
+| `src/services/` | Business services, interfaces, and application logic |
+| `src/types/` | Shared TypeScript types and interfaces |
+| `prisma/` | Prisma schema and database migrations |
+| `generated/` | Auto-generated Prisma Client |
 | `public/` | Static assets (images, icons, fonts, etc.) |
-| `docs/` | Project documentation and architecture diagrams |
-
-The project is organized using a feature-oriented architecture to improve scalability and maintainability. Related components, business logic, hooks, and API interactions are grouped by feature, reducing coupling and making the codebase easier to extend as Homify evolves.
+| `docs/` | Architecture diagrams and technical documentation |
 
 ## Architectural Decisions
 
@@ -632,9 +640,9 @@ If you'd like to contribute, feel free to fork the repository, open an issue, or
 
 Software Engineer
 
-- LinkedIn
-- Portfolio
-- Email
+- https://www.linkedin.com/in/jeremiah-ongwenyi
+- https://jeremiahongwenyi.vercel.app/
+- jerrmiahongwenyi@gmail.com
 
 
 
